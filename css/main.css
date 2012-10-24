@@ -1,1 +1,6 @@
-body{background:#000;margin:5px;color:#fff}
+body{background:#fff;color:#000}
+#board{position:relative;margin:0 auto;}
+#board line{background:#000;position:absolute;display:block}
+#board .horizontal{width:100%;height:1px}
+#board .vertical{height:100%;width:1px}
+#board .dot{position:absolute;-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;height:5px;width:5px}
