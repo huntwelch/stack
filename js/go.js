@@ -19,7 +19,7 @@
       return this.state = (function() {
         var _i, _ref, _results;
         _results = [];
-        for (num = _i = _ref = this.size - 1; _ref <= 0 ? _i <= 0 : _i >= 0; num = _ref <= 0 ? ++_i : --_i) {
+        for (num = _i = _ref = this.size; _ref <= 0 ? _i <= 0 : _i >= 0; num = _ref <= 0 ? ++_i : --_i) {
           _results.push(Array(this.size));
         }
         return _results;
@@ -36,40 +36,100 @@
 
     Boards.prototype.el = "#board";
 
+    Boards.prototype.space = 40;
+
     function Boards() {
       Boards.__super__.constructor.apply(this, arguments);
+      this.size--;
+      this.render();
     }
 
     Boards.prototype.line = function(index) {
       var element;
       element = $("<line class='vertical' />").css({
-        left: index * 40
+        left: index * this.space + this.space / 2
       });
       this.append(element);
       element = $("<line class='horizontal' />").css({
-        top: index * 40
+        top: index * this.space + this.space / 2
       });
       return this.append(element);
     };
 
+    Boards.prototype.point = function(points) {
+      var renderpoint, renderpoints, x, _fn, _i, _j, _len, _len1, _results;
+      renderpoints = [];
+      _fn = function(x) {
+        var element, y, _j, _len1, _results;
+        _results = [];
+        for (_j = 0, _len1 = points.length; _j < _len1; _j++) {
+          y = points[_j];
+          element = $("<dot/>").css({
+            left: x * this.space,
+            top: y * this.space
+          });
+          _results.push(renderpoints.push(element));
+        }
+        return _results;
+      };
+      for (_i = 0, _len = points.length; _i < _len; _i++) {
+        x = points[_i];
+        _fn(x);
+      }
+      _results = [];
+      for (_j = 0, _len1 = renderpoints.length; _j < _len1; _j++) {
+        renderpoint = renderpoints[_j];
+        _results.push(this.append(renderpoint));
+      }
+      return _results;
+    };
+
     Boards.prototype.render = function() {
-      var board, column, dimension, iter, _i, _len, _ref, _results;
+      var board, column, dimension, iter, points, _i, _len, _ref;
       board = new Board({
         size: this.size
       });
       board.newboard();
-      dimension = --this.size * 40;
+      dimension = this.size * this.space;
+      if (this.size > 11) {
+        points = [3, this.size / 2, this.size - 3];
+      } else {
+        points = [this.size / 2];
+      }
       this.el.css({
         width: dimension,
         height: dimension
       });
       _ref = board.state;
-      _results = [];
       for (iter = _i = 0, _len = _ref.length; _i < _len; iter = ++_i) {
         column = _ref[iter];
-        _results.push(this.line(iter));
+        this.line(iter);
       }
-      return _results;
+      return this.point(points);
+    };
+
+    Boards.prototype.events = {
+      "mousemove": "mouser"
+    };
+
+    Boards.prototype.mouser = function() {
+      var $shadow, offset, pos, snapx, snapy, x, y;
+      offset = $(this.el).offset();
+      x = event.x - offset.left;
+      y = event.y - offset.top;
+      $shadow = $("shadow");
+      snapx = x - x % this.space;
+      snapy = y - y % this.space;
+      $shadow.css({
+        left: snapx,
+        top: snapy
+      });
+      $("#mover").css({
+        left: x - this.space / 2,
+        top: y - this.space / 2
+      });
+      pos = [snapx / 40, snapy / 40];
+      return console.log(pos);
     };
 
     return Boards;
@@ -92,10 +152,9 @@
 
   $(function() {
     var board;
-    board = new Boards({
+    return board = new Boards({
       size: 19
     });
-    return board.render();
   });
 
 }).call(this);

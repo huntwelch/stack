@@ -1,20 +1,46 @@
 body
-  background white 
+  background #e5bb47
   color black
 
-border-radius()
-  -webkit-border-radius arguments
-  -moz-border-radius arguments
-  border-radius arguments
+gradient(top = #fff, bottom = #e5e5e5)
+  background: top; /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover,  top 0%, bottom 100%); /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,top), color-stop(100%,bottom)); /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover,  top 0%,bottom 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover,  top 0%,bottom 100%); /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover,  top 0%,bottom 100%); /* IE10+ */
+  background: radial-gradient(ellipse at center,  top 0%,bottom 100%); /* W3C */
+  /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='top', endColorstr='bottom',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+space = 40px
+piece-size = 38px 
+
+border-radius(radius = 100px)
+  -webkit-border-radius radius
+  -moz-border-radius radius
+  border-radius radius
+
+.marking
+  position absolute
+  display block
+  background black
 
 #board
   position relative
   margin 0 auto
+  cursor none
+  padding (space/2)
+
+  dot
+    @extends .marking
+    border-radius() 
+    width 6px 
+    height @width 
+    margin-top -(@width/2)
+    margin-left -(@width/2)
 
   line
-    background black
-    position absolute
-    display block
+    @extends .marking
 
   .horizontal
     width 100%
@@ -23,14 +49,25 @@ border-radius()
   .vertical
     height 100%
     width 1px
-
-  .dot
-    position absolute
-    border-radius 100px
-    height 5px    
-    width 5px    
     
+  shadow
+    @extends .marking
+    border-radius() 
+    z-index 1
+    opacity 0.3
+    width piece-size
+    height piece-size
+    margin-top -(piece-size/2)
+    margin-left -(piece-size/2)
     
-
+piece.white
+  gradient()
+  border-radius() 
+  z-index 2
+  position absolute
+  width piece-size
+  height piece-size
+  margin-top -(piece-size/2)
+  margin-left -(piece-size/2)
 
 
