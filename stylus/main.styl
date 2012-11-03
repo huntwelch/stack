@@ -1,8 +1,16 @@
 body
   background #e5bb47
   color black
+  
+space = 20px
+piece-size = 19px 
 
-gradient(top = #fff, bottom = #e5e5e5)
+#report
+  position absolute
+  top 10px
+  left 10px
+
+gradient(top = #222, bottom = #000)
   background: top; /* Old browsers */
   background: -moz-radial-gradient(center, ellipse cover,  top 0%, bottom 100%); /* FF3.6+ */
   background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,top), color-stop(100%,bottom)); /* Chrome,Safari4+ */
@@ -11,9 +19,6 @@ gradient(top = #fff, bottom = #e5e5e5)
   background: -ms-radial-gradient(center, ellipse cover,  top 0%,bottom 100%); /* IE10+ */
   background: radial-gradient(ellipse at center,  top 0%,bottom 100%); /* W3C */
   /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='top', endColorstr='bottom',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
-space = 40px
-piece-size = 38px 
 
 border-radius(radius = 100px)
   -webkit-border-radius radius
@@ -29,7 +34,10 @@ border-radius(radius = 100px)
   position relative
   margin 0 auto
   cursor none
-  padding (space/2)
+  border-bottom 1px solid black
+  border-right 1px solid black
+  
+  //padding (space/2)
 
   dot
     @extends .marking
@@ -60,14 +68,25 @@ border-radius(radius = 100px)
     margin-top -(piece-size/2)
     margin-left -(piece-size/2)
     
-piece.white
-  gradient()
-  border-radius() 
-  z-index 2
-  position absolute
-  width piece-size
-  height piece-size
-  margin-top -(piece-size/2)
-  margin-left -(piece-size/2)
+  piece
+    gradient()
+    border-radius() 
+    z-index 2
+    position absolute
+    width piece-size
+    height piece-size
+    margin-top -(piece-size/2)
+    margin-left -(piece-size/2)
+  
+  piece#mover
+    z-index 3
+  
+  piece.white
+    gradient(#fff,#e5e5e5)
+  
+  shadow, 
+  piece#mover
+    display none
+  
 
 

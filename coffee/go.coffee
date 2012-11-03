@@ -1,30 +1,52 @@
 class Board extends Spine.Model
   @configure "size", "state"
-
+  
   newboard: ->
     @state = (Array(@size) for num in [@size..0])
 
 class Boards extends Spine.Controller
   el: "#board"
-  space: 40
+  space: 20
+  move: 0
+  turn: 0
+  opponent: 1
+  turncode: ["black","white"]
+
   constructor: ->
     super
     @size--
     @render()
+    @xcheck = [0,0,-1,1]
+    @ycheck = [-1,1,0,0]
+    @mover.className = @turncode[@turn]
+ 
+
+  elements:
+    "#mover": "mover"
+    "shadow" : "shadow"
+
+
+  events:
+    "mousemove": "moving"
+    "mouseout": "hide"
+    "mouseover": "show"
+    "click": "place"
+ 
 
   line: (index) ->
     element = $("<line class='vertical' />")
-      .css left: index*@space + @space/2
+      .css left: index*@space
     @append( element )
 
     element = $("<line class='horizontal' />")
-      .css top: index*@space + @space/2
+      .css top: index*@space
     @append( element )
+
 
   point: (points) ->
     renderpoints = []
     for x in points
-      do(x) ->
+      do(x, @space) ->
         for y in points
           element = $("<dot/>")
             .css left: x*@space, top: y*@space
@@ -32,39 +54,100 @@ class Boards extends Spine.Controller
 
     @append( renderpoint ) for renderpoint in renderpoints 
 
+
   render: ->
-    board = new Board( size: @size )
-    board.newboard()
-    dimension = @size*@space
+    @board = new Board( size: @size )
+    @board.newboard()
+    @dimension = @size*@space
 
     if @size > 11 then points = [3, @size/2, @size-3] else points = [@size/2]
 
-    @el.css width: dimension, height: dimension 
-    @line(iter) for column,iter in board.state
+    @el.css width: @dimension, height: @dimension 
+    @line(iter) for column,iter in @board.state
     @point(points) 
 
-  events:
-    "mousemove": "mouser" 
 
-  mouser: ->
+  hide: ->
+    @shadow.hide()
+    @mover.hide()
+    @position = false
+
+
+  show: ->
+    @shadow.show()
+    @mover.show()
+
+
+  moving: ->
     offset = $( @el ).offset() 
-    x = event.x - offset.left
-    y = event.y - offset.top 
+    x = event.x - offset.left + @space/2
+    y = event.y - offset.top + @space/2
     
-    $shadow = $("shadow")
+    # Limits
+    outer = @dimension + @space/2
+    inner = 0
+    x = outer if x > outer
+    y = outer if y > outer
+    x = inner if x < inner
+    y = inner if y < inner
+
+    @snap = [x-x%@space, y-y%@space]
+
+    @shadow.css left: @snap[0], top: @snap[1] 
+    @mover.css left: x-@space/2, top: y-@space/2
+
+    @position = [@snap[0] / @space, @snap[1] / @space]
+    $('#report').html(@position.toString())
+
+
+  renderpiece: ->
+    piece = $("<piece/>").addClass(@turncode[@turn])
+    piece.css left: @snap[0], top: @snap[1]
+    @append( piece )
+
+
+  place: ->
+    location = @board.state[@position[0]][@position[1]]
+
+    return if location isnt undefined
+
+    @aggress()
+
+    return if not @liberty()
+
+    @renderpiece()
+    @board.state[@position[0]][@position[1]] = @turn
+    @move++
+    @turn = @move%2
+    @opponent = (@move + 1)%2
+    
+    @mover.className = @turncode[@turn]
+
   
-    snapx = x-x%@space
-    snapy = y-y%@space
+  aggress: (location) ->
+    x = @position[0]
+    y = @position[1]
 
-    $shadow.css left: snapx, top: snapy 
-    $("#mover").css left: x-@space/2, top: y-@space/2
+    for xc, iter in @xcheck
+      yc = @ycheck[iter]
 
-    pos = [snapx/40,snapy/40]
-    console.log(pos)
+      continue if y+yc == -1 or y+yc == @size or x+xc == -1 or x+xc == @size
+
+      neighbor = @board.state[x+xc][y+yc]
+      @liberty(@opponent) if neighbor is @opponent
 
 
-class Piece extends Spine.Model
-  @configure "color", "position"
+  liberty: (side = @turn) ->
+    structure = [@position]
+    step = 0
+  
+    # start structure while loop
+
+    for xc, iter in @xcheck
+      yc = @ycheck[iter]
+      continue if y+yc == -1 or y+yc == @size or x+xc == -1 or x+xc == @size
+
+    return true
 
 
 $ ->
