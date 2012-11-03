@@ -2,7 +2,7 @@ class Board extends Spine.Model
   @configure "size", "state"
   
   newboard: ->
-    @state = (Array(@size) for num in [@size..0])
+    @state = (Array(@size+1) for num in [@size..0])
 
 class Boards extends Spine.Controller
   el: "#board"
@@ -52,7 +52,7 @@ class Boards extends Spine.Controller
             .css left: x*@space, top: y*@space
           renderpoints.push(element)
 
-    @append( renderpoint ) for renderpoint in renderpoints 
+    @append( renderpoint ) for renderpoint in renderpoints
 
 
   render: ->
@@ -62,9 +62,9 @@ class Boards extends Spine.Controller
 
     if @size > 11 then points = [3, @size/2, @size-3] else points = [@size/2]
 
-    @el.css width: @dimension, height: @dimension 
+    @el.css width: @dimension, height: @dimension
     @line(iter) for column,iter in @board.state
-    @point(points) 
+    @point(points)
 
 
   hide: ->
@@ -79,7 +79,7 @@ class Boards extends Spine.Controller
 
 
   moving: ->
-    offset = $( @el ).offset() 
+    offset = $( @el ).offset()
     x = event.x - offset.left + @space/2
     y = event.y - offset.top + @space/2
     
@@ -102,6 +102,7 @@ class Boards extends Spine.Controller
 
   renderpiece: ->
     piece = $("<piece/>").addClass(@turncode[@turn])
+    piece.id = @position.join()
     piece.css left: @snap[0], top: @snap[1]
     @append( piece )
 
@@ -123,6 +124,11 @@ class Boards extends Spine.Controller
     
     @mover.className = @turncode[@turn]
 
+
+  neighbor: (x,y,xc,yc) ->
+    return false if y+yc == -1 or y+yc == @size+1 or x+xc == -1 or x+xc == @size+1
+    return @board.state[x+xc][y+yc]
+
   
   aggress: (location) ->
     x = @position[0]
@@ -130,24 +136,50 @@ class Boards extends Spine.Controller
 
     for xc, iter in @xcheck
       yc = @ycheck[iter]
+      neighbor = @neighbor(x,y,xc,yc)
+      continue if neighbor is undefined
 
-      continue if y+yc == -1 or y+yc == @size or x+xc == -1 or x+xc == @size
-
-      neighbor = @board.state[x+xc][y+yc]
-      @liberty(@opponent) if neighbor is @opponent
+      if neighbor is @opponent
+        @liberty(@opponent, [x+xc, y+yc])
 
 
-  liberty: (side = @turn) ->
-    structure = [@position]
+  liberty: (side = @turn, position = @position) ->
+    structure = [position]
     step = 0
-  
-    # start structure while loop
+    liberties = false
 
-    for xc, iter in @xcheck
-      yc = @ycheck[iter]
-      continue if y+yc == -1 or y+yc == @size or x+xc == -1 or x+xc == @size
+    # Iterate over structure
+    while step < structure.length
+      x = structure[step][0]
+      y = structure[step][1]
 
-    return true
+      for xc, iter in @xcheck
+        yc = @ycheck[iter]
+        neighbor = @neighbor(x,y,xc,yc)
+        continue if neighbor is false
+        if neighbor is undefined
+          liberties = true
+          break
+
+        if neighbor == side
+          test = [x+xc, y+yc].join()
+          existing = false
+          for piece in structure
+            if piece.join() == test
+              existing = true
+              break
+
+          structure.push([x+xc, y+yc]) if not existing
+
+      step++
+
+    # todo: check for ko
+    if side != @turn and !liberties
+      for piece in structure
+        @board.state[piece[0]][piece[1]] = undefined
+        @remove( $("#" + piece.join()) )
+
+    return liberties
 
 
 $ ->

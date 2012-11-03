@@ -20,7 +20,7 @@
         var _i, _ref, _results;
         _results = [];
         for (num = _i = _ref = this.size; _ref <= 0 ? _i <= 0 : _i >= 0; num = _ref <= 0 ? ++_i : --_i) {
-          _results.push(Array(this.size));
+          _results.push(Array(this.size + 1));
         }
         return _results;
       }).call(this);
@@ -178,6 +178,7 @@
     Boards.prototype.renderpiece = function() {
       var piece;
       piece = $("<piece/>").addClass(this.turncode[this.turn]);
+      piece.id = this.position.join();
       piece.css({
         left: this.snap[0],
         top: this.snap[1]
@@ -203,6 +204,13 @@
       return this.mover.className = this.turncode[this.turn];
     };
 
+    Boards.prototype.neighbor = function(x, y, xc, yc) {
+      if (y + yc === -1 || y + yc === this.size + 1 || x + xc === -1 || x + xc === this.size + 1) {
+        return false;
+      }
+      return this.board.state[x + xc][y + yc];
+    };
+
     Boards.prototype.aggress = function(location) {
       var iter, neighbor, x, xc, y, yc, _i, _len, _ref, _results;
       x = this.position[0];
@@ -212,12 +220,12 @@
       for (iter = _i = 0, _len = _ref.length; _i < _len; iter = ++_i) {
         xc = _ref[iter];
         yc = this.ycheck[iter];
-        if (y + yc === -1 || y + yc === this.size || x + xc === -1 || x + xc === this.size) {
+        neighbor = this.neighbor(x, y, xc, yc);
+        if (neighbor === void 0) {
           continue;
         }
-        neighbor = this.board.state[x + xc][y + yc];
         if (neighbor === this.opponent) {
-          _results.push(this.liberty(this.opponent));
+          _results.push(this.liberty(this.opponent, [x + xc, y + yc]));
         } else {
           _results.push(void 0);
         }
@@ -225,22 +233,57 @@
       return _results;
     };
 
-    Boards.prototype.liberty = function(side) {
-      var iter, step, structure, xc, yc, _i, _len, _ref;
+    Boards.prototype.liberty = function(side, position) {
+      var existing, iter, liberties, neighbor, piece, step, structure, test, x, xc, y, yc, _i, _j, _k, _len, _len1, _len2, _ref;
       if (side == null) {
         side = this.turn;
       }
-      structure = [this.position];
+      if (position == null) {
+        position = this.position;
+      }
+      structure = [position];
       step = 0;
-      _ref = this.xcheck;
-      for (iter = _i = 0, _len = _ref.length; _i < _len; iter = ++_i) {
-        xc = _ref[iter];
-        yc = this.ycheck[iter];
-        if (y + yc === -1 || y + yc === this.size || x + xc === -1 || x + xc === this.size) {
-          continue;
+      liberties = false;
+      while (step < structure.length) {
+        x = structure[step][0];
+        y = structure[step][1];
+        _ref = this.xcheck;
+        for (iter = _i = 0, _len = _ref.length; _i < _len; iter = ++_i) {
+          xc = _ref[iter];
+          yc = this.ycheck[iter];
+          neighbor = this.neighbor(x, y, xc, yc);
+          if (neighbor === false) {
+            continue;
+          }
+          if (neighbor === void 0) {
+            liberties = true;
+            break;
+          }
+          if (neighbor === side) {
+            test = [x + xc, y + yc].join();
+            existing = false;
+            for (_j = 0, _len1 = structure.length; _j < _len1; _j++) {
+              piece = structure[_j];
+              if (piece.join() === test) {
+                existing = true;
+                break;
+              }
+            }
+            if (!existing) {
+              structure.push([x + xc, y + yc]);
+            }
+          }
+        }
+        step++;
+      }
+      if (side !== this.turn && !liberties) {
+        for (_k = 0, _len2 = structure.length; _k < _len2; _k++) {
+          piece = structure[_k];
+          this.board.state[piece[0]][piece[1]] = void 0;
+          this.remove($("#" + piece.join()));
         }
       }
-      return true;
+      return liberties;
     };
 
     return Boards;
