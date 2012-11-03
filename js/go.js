@@ -178,7 +178,7 @@
     Boards.prototype.renderpiece = function() {
       var piece;
       piece = $("<piece/>").addClass(this.turncode[this.turn]);
-      piece.id = this.position.join();
+      piece.attr("id", this.position.join("_"));
       piece.css({
         left: this.snap[0],
         top: this.snap[1]
@@ -192,12 +192,13 @@
       if (location !== void 0) {
         return;
       }
+      this.board.state[this.position[0]][this.position[1]] = this.turn;
       this.aggress();
       if (!this.liberty()) {
+        this.board.state[this.position[0]][this.position[1]] = void 0;
         return;
       }
       this.renderpiece();
-      this.board.state[this.position[0]][this.position[1]] = this.turn;
       this.move++;
       this.turn = this.move % 2;
       this.opponent = (this.move + 1) % 2;
@@ -280,7 +281,7 @@
         for (_k = 0, _len2 = structure.length; _k < _len2; _k++) {
           piece = structure[_k];
           this.board.state[piece[0]][piece[1]] = void 0;
-          this.remove($("#" + piece.join()));
+          $("#" + piece.join("_")).remove();
         }
       }
       return liberties;

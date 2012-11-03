@@ -102,7 +102,7 @@ class Boards extends Spine.Controller
 
   renderpiece: ->
     piece = $("<piece/>").addClass(@turncode[@turn])
-    piece.id = @position.join()
+    piece.attr("id", @position.join("_"))
     piece.css left: @snap[0], top: @snap[1]
     @append( piece )
 
@@ -112,12 +112,14 @@ class Boards extends Spine.Controller
 
     return if location isnt undefined
 
+    @board.state[@position[0]][@position[1]] = @turn
     @aggress()
 
-    return if not @liberty()
+    if not @liberty()
+      @board.state[@position[0]][@position[1]] = undefined
+      return
 
     @renderpiece()
-    @board.state[@position[0]][@position[1]] = @turn
     @move++
     @turn = @move%2
     @opponent = (@move + 1)%2
@@ -177,7 +179,7 @@ class Boards extends Spine.Controller
     if side != @turn and !liberties
       for piece in structure
         @board.state[piece[0]][piece[1]] = undefined
-        @remove( $("#" + piece.join()) )
+        $("#" + piece.join("_")).remove()
 
     return liberties
 
