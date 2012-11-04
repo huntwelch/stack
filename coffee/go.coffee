@@ -197,6 +197,10 @@ class Game extends Spine.Controller
       step++
 
     # todo: check for ko
+    # check state, return structure to
+    # normal if ko found.
+    # return something to kill place function
+    # w/  @board.formatstate() in @board.states
     if side != @turn and !liberties
       for piece in structure
         @board.state[piece[0]][piece[1]] = undefined
