@@ -1,12 +1,29 @@
 class Board extends Spine.Model
-  @configure "size", "state"
-  
-  newboard: ->
+  @configure "size", "state", "history", "states"
+
+  newboard: () ->
     @state = (Array(@size+1) for num in [@size..0])
 
-class Boards extends Spine.Controller
+    # Will have to change for loading
+    @history = []
+    @states = []
+  
+  formatstate: () ->
+    record = []
+    for item in @state
+      record.push(item.join())
+    return record.join()
+
+  addstate: () ->
+    @states.push(@formatstate())
+
+  addhistory: (turn, move) ->
+    @history.push(turn + "," + move.join())
+
+
+class Game extends Spine.Controller
   el: "#board"
-  space: 20
+  space: 40
   move: 0
   turn: 0
   opponent: 1
@@ -93,7 +110,7 @@ class Boards extends Spine.Controller
 
     @snap = [x-x%@space, y-y%@space]
 
-    @shadow.css left: @snap[0], top: @snap[1] 
+    @shadow.css left: @snap[0], top: @snap[1]
     @mover.css left: x-@space/2, top: y-@space/2
 
     @position = [@snap[0] / @space, @snap[1] / @space]
@@ -101,7 +118,8 @@ class Boards extends Spine.Controller
 
 
   renderpiece: ->
-    piece = $("<piece/>").addClass(@turncode[@turn])
+    variant = Math.floor(Math.random() * 4)
+    piece = $("<piece/>").addClass(@turncode[@turn] + " var" + variant)
     piece.attr("id", @position.join("_"))
     piece.css left: @snap[0], top: @snap[1]
     @append( piece )
@@ -120,11 +138,14 @@ class Boards extends Spine.Controller
       return
 
     @renderpiece()
+
+    @board.addhistory(@turn, @position)
+    @board.addstate()
+
     @move++
     @turn = @move%2
     @opponent = (@move + 1)%2
-    
-    @mover.className = @turncode[@turn]
+    @mover.attr("class", @turncode[@turn])
 
 
   neighbor: (x,y,xc,yc) ->
@@ -185,5 +206,5 @@ class Boards extends Spine.Controller
 
 
 $ ->
-  board = new Boards( size: 19 )
+  game = new Game( size: 19 )
 

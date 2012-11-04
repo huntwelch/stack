@@ -5,8 +5,13 @@ body{background:#e5bb47;color:#000}
 #board dot{-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;width:6px;height:6px;margin-top:-3px;margin-left:-3px}
 #board .horizontal{width:100%;height:1px}
 #board .vertical{height:100%;width:1px}
-#board shadow{-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;z-index:1;opacity:.3;width:19px;height:19px;margin-top:-9.5px;margin-left:-9.5px}
-#board piece{background:#222;background:-moz-radial-gradient(center,ellipse cover,#222 0%,#000 100%);background:-webkit-gradient(radial,center center,0,center center,100%,color-stop(0%,#222),color-stop(100%,#000));background:-webkit-radial-gradient(center,ellipse cover,#222 0%,#000 100%);background:-o-radial-gradient(center,ellipse cover,#222 0%,#000 100%);background:-ms-radial-gradient(center,ellipse cover,#222 0%,#000 100%);background:radial-gradient(ellipse at center,#222 0%,#000 100%);-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;z-index:2;position:absolute;width:19px;height:19px;margin-top:-9.5px;margin-left:-9.5px}
+#board shadow{-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;z-index:1;opacity:.3;width:38px;height:38px;margin-top:-19px;margin-left:-19px}
+#board piece{-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;z-index:2;position:absolute;width:38px;height:38px;margin-top:-19px;margin-left:-19px;}
+#board piece img{width:38px;height:38px}
+#board piece{content:url("../img/black.png")}
 #board piece#mover{z-index:3}
-#board piece.white{background:#fff;background:-moz-radial-gradient(center,ellipse cover,#fff 0%,#e5e5e5 100%);background:-webkit-gradient(radial,center center,0,center center,100%,color-stop(0%,#fff),color-stop(100%,#e5e5e5));background:-webkit-radial-gradient(center,ellipse cover,#fff 0%,#e5e5e5 100%);background:-o-radial-gradient(center,ellipse cover,#fff 0%,#e5e5e5 100%);background:-ms-radial-gradient(center,ellipse cover,#fff 0%,#e5e5e5 100%);background:radial-gradient(ellipse at center,#fff 0%,#e5e5e5 100%);}
+#board piece.white{content:url("../img/white0.png")}
+#board piece.white.var1{content:url("../img/white1.png")}
+#board piece.white.var2{content:url("../img/white2.png")}
+#board piece.white.var3{content:url("../img/white3.png")}
 #board shadow,#board piece#mover{display:none}

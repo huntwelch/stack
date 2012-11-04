@@ -2,8 +2,8 @@ body
   background #e5bb47
   color black
   
-space = 20px
-piece-size = 19px 
+space = 40px
+piece-size = 38px 
 
 #report
   position absolute
@@ -69,7 +69,6 @@ border-radius(radius = 100px)
     margin-left -(piece-size/2)
     
   piece
-    gradient()
     border-radius() 
     z-index 2
     position absolute
@@ -77,12 +76,28 @@ border-radius(radius = 100px)
     height piece-size
     margin-top -(piece-size/2)
     margin-left -(piece-size/2)
+
+    img
+      width piece-size
+      height piece-size
+    
+  piece
+    content url(../img/black.png)
   
   piece#mover
     z-index 3
   
   piece.white
-    gradient(#fff,#e5e5e5)
+    content url(../img/white0.png)
+  
+  piece.white.var1
+    content url(../img/white1.png)
+  
+  piece.white.var2
+    content url(../img/white2.png)
+  
+  piece.white.var3
+    content url(../img/white3.png)
   
   shadow, 
   piece#mover
