@@ -1,3 +1,8 @@
+# todo: set up loading
+# todo: facebook login
+# todo: set up dbs 
+
+
 class Board extends Spine.Model
   @configure "size", "state", "history", "states"
 
@@ -28,6 +33,7 @@ class Game extends Spine.Controller
   turn: 0
   opponent: 1
   turncode: ["black","white"]
+  removals: []
 
   constructor: ->
     super
@@ -130,12 +136,17 @@ class Game extends Spine.Controller
 
     return if location isnt undefined
 
+    cache = @board.state
+
     @board.state[@position[0]][@position[1]] = @turn
     @aggress()
 
-    if not @liberty()
-      @board.state[@position[0]][@position[1]] = undefined
+    if not @liberty() or @board.formatstate() in @board.states
+      @board.state = cache
+      @removals = []
       return
+
+    $(@removals.join()).remove()
 
     @renderpiece()
 
@@ -204,7 +215,7 @@ class Game extends Spine.Controller
     if side != @turn and !liberties
       for piece in structure
         @board.state[piece[0]][piece[1]] = undefined
-        $("#" + piece.join("_")).remove()
+        @removals.push("#" + piece.join("_"))
 
     return liberties
 
