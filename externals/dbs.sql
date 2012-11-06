@@ -1,15 +1,16 @@
 create table users (
     id int primary key auto_increment not null,
     fbid int not null,
-    joined datetime,
+    joined timestamp default CURRENT_TIMESTAMP,
     username varchar(20) not null,
+    email varchar(255),
     online bool default false
 );
 
 create table games (
     id int primary key auto_increment not null,
-    started datetime,
-    finished datetime,
+    started timestamp default CURRENT_TIMESTAMP,
+    finished timestamp,
     handicap float not null,
     bid int not null,
     wid int not null,
