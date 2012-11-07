@@ -9,7 +9,11 @@ class User extends Spine.Model
 
 class Login extends Spine.Controller
   constructor: ->
-    @routes:
+    @routes
       "/login/": ->
-        # serialize form
         console.log("login")
+        # serialize form
+
+  elements:
+    "#login": "loginform"
+    "#login-submit": "login"

@@ -653,7 +653,6 @@
 
     function Controller(options) {
       this.release = __bind(this.release, this);
-
       var key, value, _ref;
       this.options = options;
       _ref = this.options;

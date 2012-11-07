@@ -94,9 +94,7 @@
     function Collection(model) {
       this.model = model;
       this.errorResponse = __bind(this.errorResponse, this);
-
       this.recordsResponse = __bind(this.recordsResponse, this);
-
     }
 
     Collection.prototype.find = function(id, params) {
@@ -157,9 +155,7 @@
     function Singleton(record) {
       this.record = record;
       this.errorResponse = __bind(this.errorResponse, this);
-
       this.recordResponse = __bind(this.recordResponse, this);
-
       this.model = this.record.constructor;
     }
 
