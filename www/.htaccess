@@ -1,0 +1,5 @@
+RewriteBase /
+RewriteEngine On
+
+RewriteRule ^users$ /ajax/users.php [NC,L]
+

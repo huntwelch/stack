@@ -5,15 +5,32 @@
 
 
 class User extends Spine.Model
-  @configure "username", "email", "games"
+  @configure "email", "uname", "password", "games"
+  @extend Spine.Model.Ajax
 
-class Login extends Spine.Controller
+  @url: "/users"
+
+  
+
+class Users extends Spine.Controller
+  el: "#menu"
+
   constructor: ->
-    @routes
-      "/login/": ->
-        console.log("login")
-        # serialize form
+    super
 
   elements:
-    "#login": "loginform"
-    "#login-submit": "login"
+    "#loginform": "loginform"
+    "#signupform": "signupform"
+
+  events:
+    "click #signup .submit": "signup"
+
+  signup: (event) ->
+    console.log("Boom")
+    user = User.fromForm(@signupform)
+    user.save()
+
+
+$ ->
+  users = new Users()
+  
