@@ -12,7 +12,7 @@
       return User.__super__.constructor.apply(this, arguments);
     }
 
-    User.configure("email", "uname", "password", "games");
+    User.configure("User", "uname", "email", "password", "games");
 
     User.extend(Spine.Model.Ajax);
 

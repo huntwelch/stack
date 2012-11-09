@@ -5,12 +5,13 @@
 
 
 class User extends Spine.Model
-  @configure "email", "uname", "password", "games"
+  @configure "User", "action", "uname", "email", "password", "games"
   @extend Spine.Model.Ajax
 
   @url: "/users"
-
   
+User.bind 'save', (user) ->
+  alert("We got a live one #{user.username}")
 
 class Users extends Spine.Controller
   el: "#menu"
@@ -26,7 +27,6 @@ class Users extends Spine.Controller
     "click #signup .submit": "signup"
 
   signup: (event) ->
-    console.log("Boom")
     user = User.fromForm(@signupform)
     user.save()
 
