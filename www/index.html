@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Go</title>
 
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/main.css" />
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/lib/spine.js"></script>
     <script type="text/javascript" src="js/lib/ajax.js"></script>
     <script type="text/javascript" src="js/lib/list.js"></script>
@@ -15,8 +17,59 @@
     <script type="text/javascript" src="js/lib/relation.js"></script>
     <script type="text/javascript" src="js/lib/route.js"></script>
     <script type="text/javascript" src="js/go.js"></script>
+    <script type="text/javascript" src="js/account.js"></script>
 </head>
 <body>
+
+<div class="controls loggedout btn-group">
+    <a href="#login" role="button" class="btn" data-toggle="modal">Login</a>
+    <a href="#signup" role="button" class="btn" data-toggle="modal">Signup</a>
+</div> 
+<div class="controls loggedin btn-group">
+    <a href="#new-game" role="button" class="btn" data-toggle="modal">New Game</a>
+    <a href="#load-game" role="button" class="btn" data-toggle="modal">Load Game</a>
+    <a href="#logout" role="button" class="btn" data-toggle="modal">Logout</a>
+</div> 
+
+<div id="menu">
+    <div id="login" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Login</h3>
+      </div>
+      <div class="modal-body">
+        <form id="loginform" class="well">
+            <input placeholder="Email" name="email" type="text" />
+            <input placeholder="Password" name="password" type="password" />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary submit">Login</button>
+      </div>
+    </div>
+     
+    <div id="signup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Login</h3>
+      </div>
+      <div class="modal-body">
+        <form id="signupform" class="well">
+            <input name="action" type="hidden" value="signup" />
+            <input placeholder="Username" name="uname" type="text" />
+            <input placeholder="Email" name="email" type="text" />
+            <input placeholder="Password" name="password" type="password" />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary submit">Signup</button>
+      </div>
+    </div>
+</div> 
+
+
     <div id="board">
         <shadow></shadow>
         <piece id="mover" class="black"></piece>

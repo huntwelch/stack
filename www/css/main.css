@@ -15,3 +15,5 @@ body{background:#e5bb47;color:#000}
 #board piece.white.var2{content:url("../img/white2.png")}
 #board piece.white.var3{content:url("../img/white3.png")}
 #board shadow,#board piece#mover{display:none}
+.controls{padding:10px}
+.controls.loggedin{display:none}

@@ -195,8 +195,7 @@
         left: x - this.space / 2,
         top: y - this.space / 2
       });
-      this.position = [this.snap[0] / this.space, this.snap[1] / this.space];
-      return $('#report').html(this.position.toString());
+      return this.position = [this.snap[0] / this.space, this.snap[1] / this.space];
     };
 
     Game.prototype.renderpiece = function() {

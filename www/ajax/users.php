@@ -22,18 +22,25 @@
 
     switch( $action ) {
         case "POST":
-            $record = array(
-                "username" => $data->uname,
-                "email" => $data->email,
-                "online" => true,
-                "password" => sha1($data->password)
-            );
-            $r = $sql->insert($record);
-            if( $r === true ) {
-                $data->id = $sql->last();
-                spit($data);
-            } else {
-                spit($r);        
+            if( $data->action == "signup" ) {
+                $record = array(
+                    "username" => $data->uname,
+                    "email" => $data->email,
+                    "online" => true,
+                    "password" => sha1($data->password)
+                );
+                $r = $sql->insert($record);
+                if( $r === true ) {
+                    $data->id = $sql->last();
+                    $data->action = "signedup";
+                    spit($data);
+                } else {
+                    $data->error = mysql_error();
+                    $data->action = "error";
+                    spit($data);
+                }
+            } elseif( $data->action == "login" ) {
+
             }
         break;
 

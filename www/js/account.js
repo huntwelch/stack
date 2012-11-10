@@ -12,7 +12,7 @@
       return User.__super__.constructor.apply(this, arguments);
     }
 
-    User.configure("User", "action", "uname", "email", "password", "games");
+    User.configure("User", "action", "uname", "email", "password", "error");
 
     User.extend(Spine.Model.Ajax);
 
@@ -23,7 +23,17 @@
   })(Spine.Model);
 
   User.bind('save', function(user) {
-    return console.log(user);
+    if (user.action === "signup" || user.action === "login") {
+      return;
+    }
+    if (user.error) {
+      alert(user.error);
+      return;
+    }
+    if (user.action === "signedup") {
+      $('.loggedout').hide();
+      return $('.loggedin').show();
+    }
   });
 
   Users = (function(_super) {
@@ -48,8 +58,7 @@
     Users.prototype.signup = function(event) {
       var user;
       user = User.fromForm(this.signupform);
-      user.save();
-      return console.log(user);
+      return user.save();
     };
 
     return Users;

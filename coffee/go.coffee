@@ -120,7 +120,6 @@ class Game extends Spine.Controller
     @mover.css left: x-@space/2, top: y-@space/2
 
     @position = [@snap[0] / @space, @snap[1] / @space]
-    $('#report').html(@position.toString())
 
 
   renderpiece: ->
