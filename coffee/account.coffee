@@ -11,7 +11,7 @@ class User extends Spine.Model
   @url: "/users"
   
 User.bind 'save', (user) ->
-  alert("We got a live one #{user.username}")
+  console.log(user)
 
 class Users extends Spine.Controller
   el: "#menu"
@@ -29,6 +29,7 @@ class Users extends Spine.Controller
   signup: (event) ->
     user = User.fromForm(@signupform)
     user.save()
+    console.log(user)
 
 
 $ ->

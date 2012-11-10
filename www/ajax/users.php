@@ -20,8 +20,8 @@
         spit("No data was sent.");
     }
 
-    switch( $data->action ) {
-        case "signup":
+    switch( $action ) {
+        case "POST":
             $record = array(
                 "username" => $data->uname,
                 "email" => $data->email,
@@ -30,7 +30,8 @@
             );
             $r = $sql->insert($record);
             if( $r === true ) {
-                spit("success");
+                $data->id = $sql->last();
+                spit($data);
             } else {
                 spit($r);        
             }
@@ -40,5 +41,5 @@
             
 
         break;
-
+    }
 ?>

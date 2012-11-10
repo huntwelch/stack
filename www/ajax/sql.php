@@ -143,6 +143,11 @@ class sql {
 			return mysql_error();
 	}
 	
+    public function last()
+    {
+        return mysql_insert_id();
+    }
+
 	public function mod($condition, $changes) 
 	{
 		if(is_numeric($condition)) 
